@@ -396,42 +396,28 @@ $('drawBtn').textContent='✨ START DRAW';
 
 }
 
-// EMAIL PASSWORD LOGIN
+// GOOGLE ADMIN LOGIN
+async function login() {
+  try {
+    setStatus('Opening Google login...');
 
-async function login(){
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    });
 
-try{
+    const result = await auth.signInWithPopup(provider);
+    const email = (result.user.email || '').toLowerCase();
 
-const password=prompt('Enter Admin Password:');
+    if (email !== ADMIN_EMAIL.toLowerCase()) {
+      await auth.signOut();
+      throw new Error('Unauthorized Google account: ' + email);
+    }
 
-if(!password)return;
-
-setStatus('Verifying admin account...');
-
-const result=await auth.signInWithEmailAndPassword(
-ADMIN_EMAIL,
-password
-);
-
-if(
-result.user.uid!==ADMIN_UID||
-(result.user.email||'').toLowerCase()!==ADMIN_EMAIL.toLowerCase()
-){
-
-await auth.signOut();
-
-throw new Error('Unauthorized admin account.');
-
-}
-
-setStatus('Admin login successful!');
-
-}catch(e){
-
-setStatus('Login error: '+e.message,true);
-
-}
-
+    setStatus('Admin login successful!');
+  } catch (e) {
+    setStatus('Login error: ' + e.message, true);
+  }
 }
 
 async function logout(){
