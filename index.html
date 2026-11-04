@@ -24,7 +24,7 @@ margin:0;
 background:radial-gradient(ellipse at 15% 0%,#1d2a55 0,transparent 38%),radial-gradient(ellipse at 95% 20%,#24204d 0,transparent 30%),var(--bg);
 color:var(--text);
 font-family:Inter,system-ui,Arial,sans-serif;
-min-height:100vh
+min-height:100vh;
 }
 .wrap{max-width:1120px;margin:auto;padding:24px 16px 44px}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -36,14 +36,25 @@ display:grid;place-items:center;color:#151629;font-size:25px
 }
 .brand h1{font-size:19px;letter-spacing:1.7px;margin:0}
 .brand p{margin:4px 0 0;color:var(--muted);font-size:11px;letter-spacing:2px}
-.admin{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#ffffff0a;border-radius:999px;padding:9px 13px;font-size:12px}
-.admin b{color:var(--gold)}
+.admin{
+display:flex;align-items:center;gap:8px;
+border:1px solid var(--line);
+background:#ffffff0a;border-radius:999px;
+padding:9px 13px;font-size:12px
+}
 button{font:inherit}
-.btn{border:0;border-radius:12px;padding:12px 17px;font-weight:800;cursor:pointer}
+.btn{
+border:0;border-radius:12px;padding:12px 17px;
+font-weight:800;cursor:pointer
+}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .primary{background:linear-gradient(135deg,#ffdc83,#ffae49);color:#21172a}
 .secondary{background:#ffffff0d;color:#dce5ff;border:1px solid var(--line)}
-.status{margin:18px 0;padding:12px 14px;border-radius:12px;background:#55d6ff12;border:1px solid #55d6ff35;color:#bdefff;font-size:13px;line-height:1.5}
+.status{
+margin:18px 0;padding:12px 14px;border-radius:12px;
+background:#55d6ff12;border:1px solid #55d6ff35;
+color:#bdefff;font-size:13px;line-height:1.6
+}
 .status.error{background:#ff829512;border-color:#ff829555;color:#ffd2d9}
 .hero{text-align:center;padding:30px 12px 22px}
 .eyebrow{color:var(--cyan);font-size:11px;letter-spacing:4px;font-weight:800}
@@ -51,29 +62,69 @@ button{font:inherit}
 .hero h2 span{color:var(--gold)}
 .sub{color:var(--muted)}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}
-.stat,.card{background:linear-gradient(145deg,rgba(24,35,67,.94),rgba(14,22,44,.96));border:1px solid var(--line);border-radius:20px}
+.stat,.card{
+background:linear-gradient(145deg,rgba(24,35,67,.94),rgba(14,22,44,.96));
+border:1px solid var(--line);border-radius:20px
+}
 .stat{padding:16px 8px;text-align:center}
 .stat strong{display:block;font-size:26px;color:var(--gold)}
 .stat small{color:var(--muted);font-size:10px;letter-spacing:1.2px}
 .main{display:grid;grid-template-columns:1.25fr .9fr;gap:15px}
 .card{padding:20px;box-shadow:0 20px 60px #0003}
-.cardhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.cardhead{
+display:flex;align-items:center;justify-content:space-between;
+gap:10px;margin-bottom:16px
+}
 .cardhead h3{margin:0;font-size:17px}
-.pill{font-size:11px;padding:7px 10px;border-radius:999px;background:#4be0a21a;color:var(--green);border:1px solid #4be0a244}
-.drawbox{min-height:280px;border-radius:18px;border:1px solid #ffd16635;background:radial-gradient(circle at 50% 40%,#ffd1661b,transparent 55%),#0b1228;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px}
+.pill{
+font-size:11px;padding:7px 10px;border-radius:999px;
+background:#4be0a21a;color:var(--green);
+border:1px solid #4be0a244
+}
+.drawbox{
+min-height:280px;border-radius:18px;
+border:1px solid #ffd16635;
+background:radial-gradient(circle at 50% 40%,#ffd1661b,transparent 55%),#0b1228;
+display:flex;flex-direction:column;align-items:center;
+justify-content:center;text-align:center;padding:22px
+}
 .draw-icon{font-size:36px}
 .draw-label{font-size:11px;color:var(--muted);letter-spacing:3px}
-.winner-name{font-size:clamp(30px,5vw,46px);font-weight:900;color:var(--gold);margin:12px 0}
+.winner-name{
+font-size:clamp(30px,5vw,46px);font-weight:900;
+color:var(--gold);margin:12px 0
+}
 .winner-note{color:var(--muted);font-size:13px;line-height:1.5}
 .actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px}
-.leader{display:flex;align-items:center;gap:12px;padding:13px;border-radius:15px;background:#ffd16612;border:1px solid #ffd16630;margin-bottom:16px}
-.avatar{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#ffd166,#ff9c61);color:#21172a;font-weight:900}
+.leader{
+display:flex;align-items:center;gap:12px;padding:13px;
+border-radius:15px;background:#ffd16612;
+border:1px solid #ffd16630;margin-bottom:16px
+}
+.avatar{
+width:42px;height:42px;border-radius:14px;
+display:grid;place-items:center;
+background:linear-gradient(135deg,#ffd166,#ff9c61);
+color:#21172a;font-weight:900
+}
 .leader small{display:block;color:var(--muted)}
 .people{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.person{background:#ffffff08;border:1px solid var(--line);border-radius:12px;padding:10px;font-size:12px;display:flex;gap:8px;align-items:center}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.person{
+background:#ffffff08;border:1px solid var(--line);
+border-radius:12px;padding:10px;font-size:12px;
+display:flex;gap:8px;align-items:center;
+justify-content:space-between
+}
+.person-name{display:flex;gap:8px;align-items:center}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0}
+.inactive-dot{background:#ff8295}
+.person small{font-size:9px;color:var(--muted)}
 .history{margin-top:20px}
-.history-item{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px}
+.history-item{
+display:flex;justify-content:space-between;gap:10px;
+padding:11px 0;border-bottom:1px solid var(--line);
+font-size:13px
+}
 .history-item small{color:var(--muted);text-align:right}
 .footer{text-align:center;color:#7180a5;font-size:11px;margin-top:24px;letter-spacing:1px}
 .hide{display:none!important}
@@ -151,10 +202,14 @@ button{font:inherit}
 <div class="actions">
 <button class="btn primary" id="drawBtn" onclick="runDraw()" disabled>Admin login required</button>
 </div>
+<p class="winner-note" style="text-align:center;margin-top:12px">
+First draw: Deepak. Subsequent draws: Random eligible participant.
+</p>
 </section>
 
 <aside>
 <section class="card">
+
 <div class="cardhead">
 <h3>👥 Player List</h3>
 <span class="pill" id="activePill">LOADING</span>
@@ -178,9 +233,9 @@ button{font:inherit}
 <div class="history-item">Loading history...</div>
 </div>
 </div>
+
 </section>
 </aside>
-
 </main>
 
 <div class="footer">TREASURE HUNT • LIVE FIREBASE • DRAW RECORDS</div>
@@ -192,7 +247,7 @@ button{font:inherit}
 
 <script>
 
-const firebaseConfig = {
+const firebaseConfig={
 apiKey:"AIzaSyDkzqlPPGgj3CHXnNTOOpfLOePCggQKZCY",
 authDomain:"treasure-hunt-ba019.firebaseapp.com",
 projectId:"treasure-hunt-ba019",
@@ -201,18 +256,19 @@ messagingSenderId:"900614646673",
 appId:"1:900614646673:web:923390dd399bfaadf3c830"
 };
 
-const ADMIN_EMAIL = "naveennk312000@gmail.com";
-const ADMIN_UID = "nKehqYXnxxZy60qUG1M54LXSlnz2";
+const ADMIN_EMAIL="naveennk312000@gmail.com";
+const ADMIN_UID="nKehqYXnxxZy60qUG1M54LXSlnz2";
+const DRAW_OPENS_AT=new Date("2026-11-05T19:00:00+05:30");
 
-const DRAW_OPENS_AT = new Date("2026-11-05T19:00:00+05:30");
+let auth,db;
+let currentUser=null;
+let isAdmin=false;
+let participants=[];
+let history=[];
+let participantCount=0;
+let eligibleCount=0;
 
-let auth, db;
-let currentUser = null;
-let isAdmin = false;
-let participants = [];
-let history = [];
-
-const $ = id => document.getElementById(id);
+const $=id=>document.getElementById(id);
 
 function setStatus(msg,error=false){
 $('status').textContent=msg;
@@ -226,31 +282,68 @@ e.textContent=txt;
 return e;
 }
 
+// DISPLAY ALL MEMBERS
+
 function renderParticipants(){
+
 const list=$('people');
 list.innerHTML='';
 
 const eligible=participants.filter(p=>p.isEligible===true);
 
-eligible.forEach(p=>{
-const row=safeText('div','person','');
-row.append(safeText('i','dot',''));
-row.append(safeText('span','',p.name||p.id));
+participants.forEach(p=>{
+
+const row=document.createElement('div');
+row.className='person';
+
+const left=document.createElement('div');
+left.className='person-name';
+
+left.append(
+safeText('i',p.isEligible===true?'dot':'dot inactive-dot','')
+);
+
+left.append(
+safeText('span','',p.name||p.id)
+);
+
+row.append(left);
+
+row.append(
+safeText('small','',p.isEligible===true?'ELIGIBLE':'COMPLETED')
+);
+
 list.append(row);
+
 });
 
-$('eligibleCount').textContent=eligible.length;
-$('activePill').textContent=eligible.length+' ELIGIBLE';
+participantCount=participants.length;
+eligibleCount=eligible.length;
+
+$('eligibleCount').textContent=eligibleCount;
+$('activePill').textContent=eligibleCount+' ELIGIBLE';
+
+updateAuthUI();
+
 }
 
+// WINNER HISTORY
+
 function renderHistory(){
+
 const box=$('historyList');
 box.innerHTML='';
 
 if(!history.length){
-box.append(safeText('div','history-item','— No winners yet'));
+
+box.append(
+safeText('div','history-item','— No winners yet')
+);
+
 }else{
+
 history.forEach(d=>{
+
 const row=document.createElement('div');
 row.className='history-item';
 
@@ -264,13 +357,19 @@ safeText('small','',`Draw ${d.drawNumber||'?'} • ${date}`)
 );
 
 box.append(row);
+
 });
+
 }
 
 $('winnerCount').textContent=history.length;
+
 }
 
+// ADMIN UI
+
 function updateAuthUI(){
+
 $('loginBtn').classList.toggle('hide',!!currentUser);
 $('logoutBtn').classList.toggle('hide',!currentUser);
 
@@ -280,27 +379,32 @@ $('authLabel').textContent=isAdmin
 ?'Signed in: '+currentUser.email
 :'👑 Admin access required';
 
-$('drawBtn').disabled=!isAdmin||new Date()<DRAW_OPENS_AT;
+$('drawBtn').disabled=
+!isAdmin||
+new Date()<DRAW_OPENS_AT||
+eligibleCount===0;
 
 if(!isAdmin){
 $('drawBtn').textContent='Admin login required';
 }else if(new Date()<DRAW_OPENS_AT){
 $('drawBtn').textContent='🔒 DRAW OPENS AT 7:00 PM';
+}else if(eligibleCount===0){
+$('drawBtn').textContent='No eligible participants';
 }else{
 $('drawBtn').textContent='✨ START DRAW';
 }
+
 }
 
-// ADMIN LOGIN - EMAIL AND PASSWORD
+// EMAIL PASSWORD LOGIN
 
 async function login(){
+
 try{
 
 const password=prompt('Enter Admin Password:');
 
-if(!password){
-return;
-}
+if(!password)return;
 
 setStatus('Verifying admin account...');
 
@@ -309,56 +413,94 @@ ADMIN_EMAIL,
 password
 );
 
-if(result.user.uid!==ADMIN_UID){
+if(
+result.user.uid!==ADMIN_UID||
+(result.user.email||'').toLowerCase()!==ADMIN_EMAIL.toLowerCase()
+){
+
 await auth.signOut();
-throw new Error('This account UID is not the authorized admin.');
+
+throw new Error('Unauthorized admin account.');
+
 }
 
 setStatus('Admin login successful!');
 
 }catch(e){
+
 setStatus('Login error: '+e.message,true);
+
 }
+
 }
 
 async function logout(){
+
 try{
+
 await auth.signOut();
 setStatus('Admin logged out.');
+
 }catch(e){
+
 setStatus('Logout error: '+e.message,true);
-}
+
 }
 
-// LIVE FIRESTORE DATA
+}
+
+// FIRESTORE SUBSCRIPTIONS + DIAGNOSTICS
 
 function subscribe(){
 
-db.collection('participants').onSnapshot(s=>{
-participants=s.docs.map(d=>({
-id:d.id,
-...d.data()
+db.collection('participants').onSnapshot(snapshot=>{
+
+participants=snapshot.docs.map(doc=>({
+id:doc.id,
+...doc.data()
 }));
 
 renderParticipants();
 
-setStatus('Participants loaded successfully.');
-},e=>{
-setStatus('Cannot read participants: '+e.message,true);
+const eligible=participants.filter(
+p=>p.isEligible===true
+);
+
+const names=participants.map(p=>p.name||p.id).join(', ');
+
+setStatus(
+'Firebase check successful. '+
+snapshot.size+' participants found. '+
+eligible.length+' eligible. Members: '+names
+);
+
+},error=>{
+
+setStatus(
+'Participants error: '+error.code+' - '+error.message,
+true
+);
+
 });
 
 db.collection('drawHistory')
 .orderBy('drawNumber','asc')
-.onSnapshot(s=>{
-history=s.docs.map(d=>({
-id:d.id,
-...d.data()
+.onSnapshot(snapshot=>{
+
+history=snapshot.docs.map(doc=>({
+id:doc.id,
+...doc.data()
 }));
 
 renderHistory();
 
-},e=>{
-setStatus('Winner history error: '+e.message,true);
+},error=>{
+
+setStatus(
+'Winner history error: '+error.code+' - '+error.message,
+true
+);
+
 });
 
 }
@@ -377,20 +519,23 @@ setStatus('Draw opens on 5 Nov 2026 at 7:00 PM.');
 return;
 }
 
+if(eligibleCount===0){
+setStatus('No eligible participants. Draw stopped.',true);
+return;
+}
+
 const btn=$('drawBtn');
 btn.disabled=true;
 btn.textContent='DRAW IN PROGRESS...';
+
+let finalWinner=null;
+let finalDrawNumber=0;
 
 try{
 
 const configRef=db.collection('adminSettings').doc('drawConfig');
 
-let finalWinner=null;
-let finalDrawNumber=0;
-
 await db.runTransaction(async tx=>{
-
-// READ CONFIG FIRST
 
 const configSnap=await tx.get(configRef);
 
@@ -399,13 +544,9 @@ throw new Error('adminSettings/drawConfig is missing.');
 }
 
 const cfg=configSnap.data();
-
 const drawNumber=(Number(cfg.drawCount)||0)+1;
 
 let winnerDoc;
-let historyRef;
-
-// FIRST DRAW - DEEPAK
 
 if(cfg.firstDrawDone!==true){
 
@@ -420,18 +561,19 @@ db.collection('participants').doc(firstId)
 );
 
 if(!winnerDoc.exists){
-throw new Error('Deepak participant not found.');
+throw new Error('Deepak participant was not found.');
 }
 
 const wd=winnerDoc.data();
 
-if(wd.isEligible!==true||wd.name!=='Deepak'){
+if(
+wd.isEligible!==true||
+(wd.name||'').toLowerCase()!=='deepak'
+){
 throw new Error('First winner configuration does not match Deepak.');
 }
 
 }else{
-
-// RANDOM DRAW FOR LATER ROUNDS
 
 const q=db.collection('participants')
 .where('isEligible','==',true);
@@ -439,7 +581,7 @@ const q=db.collection('participants')
 const eligibleSnap=await tx.get(q);
 
 const choices=eligibleSnap.docs.filter(d=>
-d.data().name!=='Naveen'
+(d.data().name||'').toLowerCase()!=='naveen'
 );
 
 if(!choices.length){
@@ -452,20 +594,18 @@ Math.floor(Math.random()*choices.length)
 
 }
 
-// CHECK HISTORY BEFORE WRITING
-
-historyRef=db.collection('drawHistory')
+const historyRef=db.collection('drawHistory')
 .doc('draw-'+String(drawNumber).padStart(3,'0'));
 
 const existing=await tx.get(historyRef);
 
 if(existing.exists){
-throw new Error('This draw record already exists.');
+throw new Error('Draw record already exists. Duplicate draw stopped.');
 }
 
-// ALL READS FINISHED. NOW WRITE.
-
 const winner=winnerDoc.data();
+
+// Writes begin only after all reads are complete.
 
 tx.update(winnerDoc.ref,{
 isEligible:false
@@ -475,7 +615,10 @@ tx.set(historyRef,{
 drawNumber:drawNumber,
 winnerId:winnerDoc.id,
 winnerName:winner.name,
-drawAt:firebase.firestore.FieldValue.serverTimestamp()
+drawAt:firebase.firestore.FieldValue.serverTimestamp(),
+method:drawNumber===1
+?'pre-designated first winner'
+:'random among eligible participants'
 });
 
 tx.update(configRef,{
@@ -494,13 +637,14 @@ finalDrawNumber=drawNumber;
 
 $('drawLabel').textContent='🎉 CONGRATULATIONS!';
 $('winnerName').textContent=finalWinner;
-$('winnerNote').textContent='Draw '+finalDrawNumber+' saved successfully to Firebase.';
+$('winnerNote').textContent=
+'Draw '+finalDrawNumber+' saved successfully to Firebase.';
 
-setStatus('Winner saved successfully.');
+setStatus('Winner saved successfully to Firebase.');
 
-}catch(e){
+}catch(error){
 
-setStatus('Draw not completed: '+e.message,true);
+setStatus('Draw not completed: '+error.message,true);
 
 $('drawLabel').textContent='DRAW NOT COMPLETED';
 $('winnerNote').textContent='No winner was recorded.';
@@ -542,7 +686,7 @@ updateAuthUI();
 
 }
 
-// FIREBASE INITIALIZATION
+// FIREBASE STARTUP
 
 try{
 
@@ -555,7 +699,7 @@ auth.setPersistence(
 firebase.auth.Auth.Persistence.LOCAL
 );
 
-auth.onAuthStateChanged(async user=>{
+auth.onAuthStateChanged(user=>{
 
 currentUser=user;
 
@@ -571,7 +715,7 @@ setStatus('Unauthorized account. Please logout.',true);
 
 }else if(isAdmin){
 
-setStatus('Admin authenticated. Firebase connected.');
+setStatus('Admin authenticated. Live Firebase database connected.');
 
 }
 
@@ -581,9 +725,9 @@ subscribe();
 
 setStatus('Firebase connected. Loading participants and winner history...');
 
-}catch(e){
+}catch(error){
 
-setStatus('Firebase initialization failed: '+e.message,true);
+setStatus('Firebase initialization failed: '+error.message,true);
 
 }
 
