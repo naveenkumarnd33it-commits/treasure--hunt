@@ -1,53 +1,716 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#10172d"><title>Treasure Hunt — Lucky Draw</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10172d">
+<title>Treasure Hunt - Lucky Draw</title>
+
 <style>
-:root{--bg:#0b1020;--panel:#151f3a;--line:#ffffff20;--text:#f7f8ff;--muted:#aab5d0;--gold:#ffd166;--green:#55d6a3;--red:#ff8295}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#18264d,#0b1020 55%);color:var(--text);font:16px system-ui,Arial,sans-serif}.wrap{max-width:850px;margin:auto;padding:20px 14px 40px}.top,.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}h1{font-size:22px;margin:0;letter-spacing:1px}.muted{color:var(--muted)}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:16px}button{border:0;border-radius:12px;padding:12px 16px;font-weight:750;cursor:pointer;background:var(--gold);color:#17182a}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#ffffff12;color:var(--text);border:1px solid var(--line)}.status{padding:12px 14px;border-radius:12px;background:#55d6ff18;border:1px solid #55d6ff44;margin-top:16px;line-height:1.5}.status.error{background:#ff829518;border-color:#ff829566;color:#ffd8df}.hero{text-align:center;padding:24px 8px}.hero h2{font-size:clamp(32px,7vw,48px);margin:8px 0;color:var(--gold)}.prize{font-size:25px;color:var(--gold);font-weight:800}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{text-align:center;padding:14px 5px;background:#ffffff08;border:1px solid var(--line);border-radius:14px}.stat b{display:block;font-size:25px;color:var(--gold)}.draw{text-align:center;padding:25px 12px;background:#0b1329;border:1px solid #ffd16655;border-radius:16px}.winner{font-size:clamp(30px,7vw,44px);font-weight:900;color:var(--gold);margin:12px}.note{font-size:12px;color:var(--muted);line-height:1.5}.list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.person,.historyItem{padding:10px;border:1px solid var(--line);border-radius:10px;background:#ffffff08}.historyItem{display:flex;justify-content:space-between;gap:10px;margin-top:8px}@media(max-width:520px){.list{grid-template-columns:1fr}.stats{gap:6px}.stat b{font-size:21px}}
-</style></head><body><div class="wrap">
-<header class="top"><div><h1>◆ TREASURE HUNT</h1><div class="muted">Monthly Lucky Draw • Season 01</div></div><div class="row"><span id="authLabel" class="muted">Admin access required</span><button id="loginBtn" onclick="login()">Admin Login</button><button id="logoutBtn" class="secondary" onclick="logout()" hidden>Logout</button></div></header>
-<div id="status" class="status">Connecting to Firebase…</div>
-<section class="hero"><div class="muted">ONE DRAW • ONE LUCKY WINNER</div><h2>WHO WILL WIN?</h2><div class="prize">₹30,000 Prize</div><p class="muted">First draw: 5 November 2026 • 7:00 PM</p><p id="countdown" class="note"></p></section>
-<section class="stats"><div class="stat"><b id="eligibleCount">—</b><span class="muted">Eligible players</span></div><div class="stat"><b id="drawCount">0</b><span class="muted">Draws completed</span></div><div class="stat"><b>₹30,000</b><span class="muted">Prize amount</span></div></section>
-<section class="card"><div class="row"><h2>🎯 Lucky Draw</h2><span id="drawState" class="muted">Scheduled</span></div><div class="draw"><div style="font-size:38px">🏆</div><div class="muted">WINNER</div><div id="winnerName" class="winner">Ready?</div><div id="winnerNote" class="muted">The draw opens at 7:00 PM on 5 November 2026.</div></div><div style="text-align:center;margin-top:14px"><button id="drawBtn" onclick="runDraw()" disabled>Admin login required</button></div><p class="note">The first winner is Deepak, as agreed by the group. Later draws randomly select from the remaining eligible participants.</p></section>
-<section class="card"><div class="row"><h2>👥 Player List</h2><span id="eligiblePill" class="muted">Loading…</span></div><div id="people" class="list"></div><div class="row" style="margin-top:22px"><h2>🏅 Winner History</h2></div><div id="history"><div class="muted">Loading history…</div></div></section><p class="note" style="text-align:center;margin-top:20px">TREASURE HUNT • LIVE FIREBASE RECORDS</p></div>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+:root {
+  --bg:#0b1020;
+  --panel:#151f3a;
+  --line:#ffffff20;
+  --text:#f7f8ff;
+  --muted:#aab5d0;
+  --gold:#ffd166;
+  --green:#55d6a3;
+  --red:#ff8295;
+}
+
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  background:linear-gradient(140deg,#18264d,#0b1020 55%);
+  color:var(--text);
+  font:16px system-ui,Arial,sans-serif;
+}
+
+.wrap {
+  max-width:850px;
+  margin:auto;
+  padding:20px 14px 40px;
+}
+
+.top,.row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+h1 { font-size:22px; margin:0; }
+h2 { margin:0; }
+
+.muted { color:var(--muted); }
+
+.card {
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:18px;
+  margin-top:16px;
+}
+
+button {
+  border:0;
+  border-radius:12px;
+  padding:12px 16px;
+  font-weight:750;
+  cursor:pointer;
+  background:var(--gold);
+  color:#17182a;
+}
+
+button:disabled {
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.secondary {
+  background:#ffffff12;
+  color:var(--text);
+  border:1px solid var(--line);
+}
+
+.status {
+  padding:12px 14px;
+  border-radius:12px;
+  background:#55d6ff18;
+  border:1px solid #55d6ff44;
+  margin-top:16px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+
+.status.error {
+  background:#ff829518;
+  border-color:#ff829566;
+  color:#ffd8df;
+}
+
+.hero {
+  text-align:center;
+  padding:24px 8px;
+}
+
+.hero h2 {
+  font-size:clamp(32px,7vw,48px);
+  margin:8px 0;
+  color:var(--gold);
+}
+
+.prize {
+  font-size:25px;
+  color:var(--gold);
+  font-weight:800;
+}
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.stat {
+  text-align:center;
+  padding:14px 5px;
+  background:#ffffff08;
+  border:1px solid var(--line);
+  border-radius:14px;
+}
+
+.stat b {
+  display:block;
+  font-size:25px;
+  color:var(--gold);
+}
+
+.draw {
+  text-align:center;
+  padding:25px 12px;
+  background:#0b1329;
+  border:1px solid #ffd16655;
+  border-radius:16px;
+}
+
+.winner {
+  font-size:clamp(30px,7vw,44px);
+  font-weight:900;
+  color:var(--gold);
+  margin:12px;
+  overflow-wrap:anywhere;
+}
+
+.note {
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.list {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+
+.person,.historyItem {
+  padding:10px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#ffffff08;
+}
+
+.historyItem {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:8px;
+  flex-wrap:wrap;
+}
+
+@media(max-width:520px) {
+  .list { grid-template-columns:1fr; }
+  .stats { gap:6px; }
+  .stat b { font-size:21px; }
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <h1>◆ TREASURE HUNT</h1>
+    <div class="muted">Monthly Lucky Draw • Season 01</div>
+  </div>
+
+  <div class="row">
+    <span id="authLabel" class="muted">Admin access required</span>
+    <button id="loginBtn" onclick="login()">Admin Login</button>
+    <button id="logoutBtn" class="secondary"
+      onclick="logout()" hidden>Logout</button>
+  </div>
+</header>
+
+<div id="status" class="status">Connecting to Firebase...</div>
+
+<section class="hero">
+  <div class="muted">ONE DRAW • ONE LUCKY WINNER</div>
+  <h2>WHO WILL WIN?</h2>
+  <div class="prize">₹30,000 Prize</div>
+  <p class="muted">First draw: 5 November 2026 • 7:00 PM</p>
+  <p id="countdown" class="note"></p>
+</section>
+
+<section class="stats">
+  <div class="stat">
+    <b id="eligibleCount">0</b>
+    <span class="muted">Eligible players</span>
+  </div>
+  <div class="stat">
+    <b id="drawCount">0</b>
+    <span class="muted">Draws completed</span>
+  </div>
+  <div class="stat">
+    <b>₹30,000</b>
+    <span class="muted">Prize amount</span>
+  </div>
+</section>
+
+<section class="card">
+  <div class="row">
+    <h2>🎯 Lucky Draw</h2>
+    <span id="drawState" class="muted">Scheduled</span>
+  </div>
+
+  <div class="draw">
+    <div style="font-size:38px">🏆</div>
+    <div class="muted">WINNER</div>
+    <div id="winnerName" class="winner">Ready?</div>
+    <div id="winnerNote" class="muted">
+      The draw opens at 7:00 PM on 5 November 2026.
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:14px">
+    <button id="drawBtn" onclick="runDraw()" disabled>
+      Admin login required
+    </button>
+  </div>
+
+  <p class="note">
+    The first winner is Deepak, as agreed by the group.
+    Later draws randomly select from the remaining eligible participants.
+  </p>
+</section>
+
+<section class="card">
+  <div class="row">
+    <h2>👥 Player List</h2>
+    <span id="eligiblePill" class="muted">Loading...</span>
+  </div>
+
+  <div id="people" class="list"></div>
+
+  <div class="row" style="margin-top:22px">
+    <h2>🏅 Winner History</h2>
+  </div>
+
+  <div id="history">
+    <div class="muted">Loading history...</div>
+  </div>
+</section>
+
+<p class="note" style="text-align:center;margin-top:20px">
+  TREASURE HUNT • LIVE FIREBASE RECORDS
+</p>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
 <script>
-const firebaseConfig={apiKey:"AIzaSyDkzqlPPGgj3CHXnNTOOpfLOePCggQKZCY",authDomain:"treasure-hunt-ba019.firebaseapp.com",projectId:"treasure-hunt-ba019",storageBucket:"treasure-hunt-ba019.firebasestorage.app",messagingSenderId:"900614646673",appId:"1:900614646673:web:923390dd399bfaadf3c830"};
-const ADMIN_EMAIL="naveennk312000@gmail.com",ADMIN_UID="nKehqYXnxxZy60qUG1M54LXSlnz2";
-const DRAW_OPENS_AT=new Date("2026-11-05T19:00:00+05:30");
-let auth,db,currentUser=null,isAdmin=false,participants=[],winners=[];
-const el=id=>document.getElementById(id);
-function status(m,error=false){el("status").textContent=m;el("status").className="status"+(error?" error":"")}
-function node(tag,text,cls=""){const n=document.createElement(tag);n.textContent=text;if(cls)n.className=cls;return n}
-function renderPeople(){const box=el("people");box.replaceChildren();const a=participants.filter(p=>p.isEligible===true);a.forEach(p=>box.append(node("div","🟢 "+(p.name||p.id),"person")));el("eligibleCount").textContent=a.length;el("eligiblePill").textContent=a.length+" eligible";if(!a.length)box.append(node("div","No eligible participants found.","muted"));updateButton()}
-function renderHistory(){const box=el("history");box.replaceChildren();el("drawCount").textContent=winners.length;if(!winners.length){box.append(node("div","No winners yet.","muted"));return}winners.forEach(w=>{const r=document.createElement("div");r.className="historyItem";const dt=w.drawAt&&w.drawAt.toDate?w.drawAt.toDate().toLocaleString("en-IN"):"Saved";r.append(node("b","🏅 "+(w.winnerName||"Unknown")),node("span","Draw "+(w.drawNumber||"?")+" • "+dt,"note"));box.append(r)})}
-function updateAuth(){el("loginBtn").hidden=!!currentUser;el("logoutBtn").hidden=!currentUser;el("authLabel").textContent=isAdmin?"👑 Admin: Naveen":currentUser?"Signed in":"Admin access required";updateButton()}
-function updateButton(){const count=participants.filter(p=>p.isEligible===true).length,before=Date.now()<DRAW_OPENS_AT.getTime();el("drawBtn").disabled=!isAdmin||before||count===0;el("drawBtn").textContent=!isAdmin?"Admin login required":before?"🔒 Opens 7:00 PM":count===0?"No eligible players":"✨ Start Draw"}
+const firebaseConfig = {
+  apiKey: "AIzaSyDkzqlPPGgj3CHXnNTOOpfLOePCggQKZCY",
+  authDomain: "treasure-hunt-ba019.firebaseapp.com",
+  projectId: "treasure-hunt-ba019",
+  storageBucket: "treasure-hunt-ba019.firebasestorage.app",
+  messagingSenderId: "900614646673",
+  appId: "1:900614646673:web:923390dd399bfaadf3c830"
+};
+
+const ADMIN_EMAIL = "naveennk312000@gmail.com";
+const ADMIN_UID = "nKehqYXnxxZy60qUG1M54LXSlnz2";
+
+const DRAW_OPENS_AT = new Date("2026-11-05T19:00:00+05:30");
+
+const INITIAL_PLAYERS = [
+  ["arul","Arul"],
+  ["boopathi","Boopathi"],
+  ["deepak","Deepak"],
+  ["deepak-2","Deepak-2"],
+  ["gandhi","Gandhi"],
+  ["gokulnath","Gokulnath"],
+  ["kannan","Kannan"],
+  ["karthi","Karthi"],
+  ["keerthika","Keerthika"],
+  ["mani-1","Mani-1"],
+  ["mani-2","Mani-2"],
+  ["sitheesh","Sitheesh"],
+  ["suresh","Suresh"],
+  ["tamil","Tamil"]
+];
+
+let auth;
+let db;
+let currentUser = null;
+let isAdmin = false;
+let participants = [];
+let winners = [];
+
+const el = id => document.getElementById(id);
+
+function status(message,error=false) {
+  el("status").textContent = message;
+  el("status").className = "status" + (error ? " error" : "");
+}
+
+function node(tag,text,cls="") {
+  const n = document.createElement(tag);
+  n.textContent = text;
+  if (cls) n.className = cls;
+  return n;
+}
+
+function renderPeople() {
+  const box = el("people");
+  box.replaceChildren();
+
+  const eligible = participants.filter(p => p.isEligible === true);
+
+  eligible.forEach(p => {
+    box.append(node("div","🟢 " + (p.name || p.id),"person"));
+  });
+
+  el("eligibleCount").textContent = eligible.length;
+  el("eligiblePill").textContent = eligible.length + " eligible";
+
+  if (!eligible.length) {
+    box.append(node("div","No eligible participants found.","muted"));
+  }
+
+  updateButton();
+}
+
+function renderHistory() {
+  const box = el("history");
+  box.replaceChildren();
+
+  el("drawCount").textContent = winners.length;
+
+  if (!winners.length) {
+    box.append(node("div","No winners yet.","muted"));
+    return;
+  }
+
+  const latest = winners[winners.length - 1];
+  el("winnerName").textContent = latest.winnerName || "Unknown";
+  el("winnerNote").textContent =
+    "Draw " + (latest.drawNumber || "") + " completed.";
+
+  winners.forEach(w => {
+    const row = document.createElement("div");
+    row.className = "historyItem";
+
+    const date = w.drawAt && w.drawAt.toDate
+      ? w.drawAt.toDate().toLocaleString("en-IN")
+      : "Saved";
+
+    row.append(
+      node("b","🏅 " + (w.winnerName || "Unknown")),
+      node("span","Draw " + (w.drawNumber || "?") + " • " + date,"note")
+    );
+
+    box.append(row);
+  });
+}
+
+function updateAuth() {
+  el("loginBtn").hidden = !!currentUser;
+  el("logoutBtn").hidden = !currentUser;
+
+  el("authLabel").textContent = isAdmin
+    ? "👑 Admin: Naveen"
+    : currentUser
+      ? "Signed in"
+      : "Admin access required";
+
+  updateButton();
+}
+
+function updateButton() {
+  const count = participants.filter(p => p.isEligible === true).length;
+  const before = Date.now() < DRAW_OPENS_AT.getTime();
+
+  el("drawBtn").disabled = !isAdmin || before || count === 0;
+
+  el("drawBtn").textContent = !isAdmin
+    ? "Admin login required"
+    : before
+      ? "🔒 Opens 7:00 PM"
+      : count === 0
+        ? "No eligible players"
+        : "✨ Start Draw";
+}
+
+/* GOOGLE REDIRECT LOGIN */
 async function login() {
   try {
-    setStatus('Google account verification...');
+    status("Opening Google Login...");
 
     const provider = new firebase.auth.GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
 
-    const result = await auth.signInWithPopup(provider);
+    provider.setCustomParameters({
+      prompt: "select_account"
+    });
 
-    if (
-      result.user.uid !== ADMIN_UID ||
-      (result.user.email || '').toLowerCase() !== ADMIN_EMAIL.toLowerCase()
-    ) {
-      await auth.signOut();
-      throw new Error('Unauthorized admin account.');
-    }
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    await auth.signInWithRedirect(provider);
 
-    setStatus('Admin login successful!');
   } catch (e) {
-    setStatus('Login error: ' + e.message, true);
+    status("Login error: " + e.message,true);
   }
 }
-async function logout(){try{await auth.signOut();status("Logged out.")}catch(e){status("Logout failed: "+e.message,true)}}
-function subscribe(){db.collection("participants").onSnapshot(s=>{participants=s.docs.map(d=>({id:d.id,...d.data()}));renderPeople();status("Participants loaded successfully.")},e=>status("Participants read error: "+e.message,true));db.collection("drawHistory").orderBy("drawNumber","asc").onSnapshot(s=>{winners=s.docs.map(d=>({id:d.id,...d.data()}));renderHistory()},e=>status("Winner history read error: "+e.message,true))}
-async function runDraw(){if(!isAdmin||!currentUser||currentUser.uid!==ADMIN_UID){status("Only the authorized admin can draw.",true);return}if(Date.now()<DRAW_OPENS_AT.getTime()){status("The draw opens on 5 November 2026 at 7:00 PM.");return}el("drawBtn").disabled=true;try{const configRef=db.collection("adminSettings").doc("drawConfig"),deepakRef=db.collection("participants").doc("deepak");await db.runTransaction(async tx=>{const cs=await tx.get(configRef);if(!cs.exists)throw new Error("adminSettings/drawConfig is missing.");const cfg=cs.data(),number=(Number(cfg.drawCount)||0)+1;let win;if(cfg.firstDrawDone!==true){win=await tx.get(deepakRef);if(!win.exists)throw new Error("Participant document ID 'deepak' was not found.");const x=win.data();if(x.isEligible!==true||String(x.name||"").toLowerCase()!=="deepak")throw new Error("Deepak must be eligible. Check his participant document.")}else{const q=db.collection("participants").where("isEligible","==",true),s=await tx.get(q),choices=s.docs.filter(d=>String(d.data().name||"").toLowerCase()!=="naveen");if(!choices.length)throw new Error("No eligible participants remain.");win=choices[Math.floor(Math.random()*choices.length)]}const hRef=db.collection("drawHistory").doc("draw-"+String(number).padStart(3,"0")),old=await tx.get(hRef);if(old.exists)throw new Error("This draw number is already saved; stopping duplicate.");const w=win.data(),name=w.name||win.id;tx.update(win.ref,{isEligible:false,firstWinner:number===1});tx.set(hRef,{drawNumber:number,winnerId:win.id,winnerName:name,drawAt:firebase.firestore.FieldValue.serverTimestamp(),method:number===1?"First draw agreed by group":"Random selection"});tx.update(configRef,{drawCount:number,firstDrawDone:true,lastWinnerId:win.id,lastWinnerName:name,lastDrawAt:firebase.firestore.FieldValue.serverTimestamp()});window.lastWinner=name;window.lastNumber=number});el("winnerName").textContent=window.lastWinner;el("winnerNote").textContent="Draw "+window.lastNumber+" saved successfully.";status("Winner saved to Firebase.")}catch(e){status("Draw not completed: "+e.message,true)}finally{updateButton()}}
-function clock(){const ms=DRAW_OPENS_AT-Date.now();if(ms>0){const d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000);el("countdown").textContent=`Draw starts in ${d}d ${h}h ${m}m ${s}s`;el("drawState").textContent="Scheduled"}else{el("countdown").textContent="The draw is open.";el("drawState").textContent="Open"}updateButton()}
-try{firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.firestore();auth.onAuthStateChanged(u=>{currentUser=u;isAdmin=!!u&&u.uid===ADMIN_UID&&(u.email||"").toLowerCase()===ADMIN_EMAIL;updateAuth();if(u&&!isAdmin)status("Wrong account. Please log out and use the admin account.",true);else if(isAdmin)status("Admin authenticated. Firebase connected.")});subscribe()}catch(e){status("Firebase setup error: "+e.message,true)}clock();setInterval(clock,1000);
-</script></body></html>
+
+/* CHECK GOOGLE LOGIN RESULT */
+async function checkLoginResult() {
+  try {
+    const result = await auth.getRedirectResult();
+
+    if (result.user) {
+      if (
+        result.user.uid !== ADMIN_UID ||
+        (result.user.email || "").toLowerCase() !== ADMIN_EMAIL.toLowerCase()
+      ) {
+        await auth.signOut();
+        status("Wrong Google account. Use the admin account.",true);
+      } else {
+        status("Admin login successful!");
+      }
+    }
+  } catch (e) {
+    status("Google Login error: " + e.message,true);
+  }
+}
+
+async function logout() {
+  try {
+    await auth.signOut();
+    status("Logged out.");
+  } catch (e) {
+    status("Logout failed: " + e.message,true);
+  }
+}
+
+/* CREATE MISSING INITIAL FIRESTORE RECORDS */
+async function setupInitialData() {
+  if (!isAdmin) return;
+
+  try {
+    status("Checking participant records...");
+
+    const batch = db.batch();
+    let changes = 0;
+
+    for (const [id,name] of INITIAL_PLAYERS) {
+      const ref = db.collection("participants").doc(id);
+      const snap = await ref.get();
+
+      if (!snap.exists) {
+        batch.set(ref,{
+          name: name,
+          isEligible: true
+        });
+        changes++;
+      }
+    }
+
+    const configRef = db.collection("adminSettings").doc("drawConfig");
+    const configSnap = await configRef.get();
+
+    if (!configSnap.exists) {
+      batch.set(configRef,{
+        drawCount: 0,
+        firstDrawDone: false
+      });
+      changes++;
+    }
+
+    if (changes > 0) {
+      await batch.commit();
+    }
+
+    status("Firebase setup completed. Participant records checked.");
+  } catch (e) {
+    status("Setup error: " + e.message,true);
+  }
+}
+
+/* FIRESTORE LIVE DATA */
+function subscribe() {
+  db.collection("participants").onSnapshot(snapshot => {
+    participants = snapshot.docs.map(d => ({
+      id: d.id,
+      ...d.data()
+    }));
+
+    renderPeople();
+
+    if (!isAdmin) {
+      status("Participants loaded successfully.");
+    }
+  }, e => {
+    status("Participants read error: " + e.message,true);
+  });
+
+  db.collection("drawHistory")
+    .orderBy("drawNumber","asc")
+    .onSnapshot(snapshot => {
+      winners = snapshot.docs.map(d => ({
+        id: d.id,
+        ...d.data()
+      }));
+
+      renderHistory();
+    }, e => {
+      status("Winner history read error: " + e.message,true);
+    });
+}
+
+/* DRAW FUNCTION */
+async function runDraw() {
+  if (!isAdmin || !currentUser || currentUser.uid !== ADMIN_UID) {
+    status("Only the authorized admin can draw.",true);
+    return;
+  }
+
+  if (Date.now() < DRAW_OPENS_AT.getTime()) {
+    status("The draw opens on 5 November 2026 at 7:00 PM.");
+    return;
+  }
+
+  el("drawBtn").disabled = true;
+
+  try {
+    const configRef = db.collection("adminSettings").doc("drawConfig");
+    const deepakRef = db.collection("participants").doc("deepak");
+
+    await db.runTransaction(async tx => {
+
+      const configSnap = await tx.get(configRef);
+
+      if (!configSnap.exists) {
+        throw new Error("Draw configuration is missing. Login again.");
+      }
+
+      const config = configSnap.data();
+      const number = (Number(config.drawCount) || 0) + 1;
+
+      let winnerDoc;
+
+      if (config.firstDrawDone !== true) {
+
+        winnerDoc = await tx.get(deepakRef);
+
+        if (!winnerDoc.exists) {
+          throw new Error("Deepak participant record is missing.");
+        }
+
+        const deepak = winnerDoc.data();
+
+        if (
+          deepak.isEligible !== true ||
+          String(deepak.name || "").toLowerCase() !== "deepak"
+        ) {
+          throw new Error("Deepak is not eligible for the first draw.");
+        }
+
+      } else {
+
+        const query = db.collection("participants")
+          .where("isEligible","==",true);
+
+        const snapshot = await tx.get(query);
+
+        const choices = snapshot.docs.filter(d =>
+          d.id.toLowerCase() !== "naveen" &&
+          String(d.data().name || "").toLowerCase() !== "naveen"
+        );
+
+        if (!choices.length) {
+          throw new Error("No eligible participants remain.");
+        }
+
+        winnerDoc = choices[Math.floor(Math.random() * choices.length)];
+      }
+
+      const historyRef = db.collection("drawHistory")
+        .doc("draw-" + String(number).padStart(3,"0"));
+
+      const historySnap = await tx.get(historyRef);
+
+      if (historySnap.exists) {
+        throw new Error("This draw is already saved. Duplicate stopped.");
+      }
+
+      const winner = winnerDoc.data();
+      const winnerName = winner.name || winnerDoc.id;
+
+      tx.update(winnerDoc.ref,{
+        isEligible:false,
+        firstWinner:number === 1
+      });
+
+      tx.set(historyRef,{
+        drawNumber:number,
+        winnerId:winnerDoc.id,
+        winnerName:winnerName,
+        drawAt:firebase.firestore.FieldValue.serverTimestamp(),
+        method:number === 1
+          ? "First draw agreed by group"
+          : "Random selection"
+      });
+
+      tx.update(configRef,{
+        drawCount:number,
+        firstDrawDone:true,
+        lastWinnerId:winnerDoc.id,
+        lastWinnerName:winnerName,
+        lastDrawAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      window.lastWinner = winnerName;
+      window.lastNumber = number;
+    });
+
+    el("winnerName").textContent = window.lastWinner;
+    el("winnerNote").textContent =
+      "Draw " + window.lastNumber + " saved successfully.";
+
+    status("Winner saved successfully to Firebase.");
+
+  } catch (e) {
+    status("Draw not completed: " + e.message,true);
+  } finally {
+    updateButton();
+  }
+}
+
+/* COUNTDOWN */
+function clock() {
+  const ms = DRAW_OPENS_AT.getTime() - Date.now();
+
+  if (ms > 0) {
+    const d = Math.floor(ms / 86400000);
+    const h = Math.floor(ms % 86400000 / 3600000);
+    const m = Math.floor(ms % 3600000 / 60000);
+    const s = Math.floor(ms % 60000 / 1000);
+
+    el("countdown").textContent =
+      `Draw starts in ${d}d ${h}h ${m}m ${s}s`;
+
+    el("drawState").textContent = "Scheduled";
+  } else {
+    el("countdown").textContent = "The draw is open.";
+    el("drawState").textContent = "Open";
+  }
+
+  updateButton();
+}
+
+/* FIREBASE START */
+try {
+  firebase.initializeApp(firebaseConfig);
+
+  auth = firebase.auth();
+  db = firebase.firestore();
+
+  auth.onAuthStateChanged(async user => {
+    currentUser = user;
+
+    isAdmin = !!user &&
+      user.uid === ADMIN_UID &&
+      (user.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+    updateAuth();
+
+    if (user && !isAdmin) {
+      status("Wrong Google account. Please logout and use the admin account.",true);
+      return;
+    }
+
+    if (isAdmin) {
+      await setupInitialData();
+      status("Admin authenticated. Firebase connected.");
+    }
+  });
+
+  subscribe();
+  checkLoginResult();
+
+} catch (e) {
+  status("Firebase setup error: " + e.message,true);
+}
+
+clock();
+setInterval(clock,1000);
+
+</script>
+</body>
+</html>
