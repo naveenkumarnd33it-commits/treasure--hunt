@@ -23,7 +23,28 @@ function renderPeople(){const box=el("people");box.replaceChildren();const a=par
 function renderHistory(){const box=el("history");box.replaceChildren();el("drawCount").textContent=winners.length;if(!winners.length){box.append(node("div","No winners yet.","muted"));return}winners.forEach(w=>{const r=document.createElement("div");r.className="historyItem";const dt=w.drawAt&&w.drawAt.toDate?w.drawAt.toDate().toLocaleString("en-IN"):"Saved";r.append(node("b","🏅 "+(w.winnerName||"Unknown")),node("span","Draw "+(w.drawNumber||"?")+" • "+dt,"note"));box.append(r)})}
 function updateAuth(){el("loginBtn").hidden=!!currentUser;el("logoutBtn").hidden=!currentUser;el("authLabel").textContent=isAdmin?"👑 Admin: Naveen":currentUser?"Signed in":"Admin access required";updateButton()}
 function updateButton(){const count=participants.filter(p=>p.isEligible===true).length,before=Date.now()<DRAW_OPENS_AT.getTime();el("drawBtn").disabled=!isAdmin||before||count===0;el("drawBtn").textContent=!isAdmin?"Admin login required":before?"🔒 Opens 7:00 PM":count===0?"No eligible players":"✨ Start Draw"}
-async function login(){const password=prompt("Enter Admin Password:");if(!password)return;try{status("Checking admin login…");const c=await auth.signInWithEmailAndPassword(ADMIN_EMAIL,password);if(c.user.uid!==ADMIN_UID||(c.user.email||"").toLowerCase()!==ADMIN_EMAIL){await auth.signOut();throw new Error("This is not the authorized admin account.")}status("Admin login successful.")}catch(e){status("Login failed: "+e.message,true)}}
+async function login() {
+  try {
+    setStatus('Google account verification...');
+
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+
+    const result = await auth.signInWithPopup(provider);
+
+    if (
+      result.user.uid !== ADMIN_UID ||
+      (result.user.email || '').toLowerCase() !== ADMIN_EMAIL.toLowerCase()
+    ) {
+      await auth.signOut();
+      throw new Error('Unauthorized admin account.');
+    }
+
+    setStatus('Admin login successful!');
+  } catch (e) {
+    setStatus('Login error: ' + e.message, true);
+  }
+}
 async function logout(){try{await auth.signOut();status("Logged out.")}catch(e){status("Logout failed: "+e.message,true)}}
 function subscribe(){db.collection("participants").onSnapshot(s=>{participants=s.docs.map(d=>({id:d.id,...d.data()}));renderPeople();status("Participants loaded successfully.")},e=>status("Participants read error: "+e.message,true));db.collection("drawHistory").orderBy("drawNumber","asc").onSnapshot(s=>{winners=s.docs.map(d=>({id:d.id,...d.data()}));renderHistory()},e=>status("Winner history read error: "+e.message,true))}
 async function runDraw(){if(!isAdmin||!currentUser||currentUser.uid!==ADMIN_UID){status("Only the authorized admin can draw.",true);return}if(Date.now()<DRAW_OPENS_AT.getTime()){status("The draw opens on 5 November 2026 at 7:00 PM.");return}el("drawBtn").disabled=true;try{const configRef=db.collection("adminSettings").doc("drawConfig"),deepakRef=db.collection("participants").doc("deepak");await db.runTransaction(async tx=>{const cs=await tx.get(configRef);if(!cs.exists)throw new Error("adminSettings/drawConfig is missing.");const cfg=cs.data(),number=(Number(cfg.drawCount)||0)+1;let win;if(cfg.firstDrawDone!==true){win=await tx.get(deepakRef);if(!win.exists)throw new Error("Participant document ID 'deepak' was not found.");const x=win.data();if(x.isEligible!==true||String(x.name||"").toLowerCase()!=="deepak")throw new Error("Deepak must be eligible. Check his participant document.")}else{const q=db.collection("participants").where("isEligible","==",true),s=await tx.get(q),choices=s.docs.filter(d=>String(d.data().name||"").toLowerCase()!=="naveen");if(!choices.length)throw new Error("No eligible participants remain.");win=choices[Math.floor(Math.random()*choices.length)]}const hRef=db.collection("drawHistory").doc("draw-"+String(number).padStart(3,"0")),old=await tx.get(hRef);if(old.exists)throw new Error("This draw number is already saved; stopping duplicate.");const w=win.data(),name=w.name||win.id;tx.update(win.ref,{isEligible:false,firstWinner:number===1});tx.set(hRef,{drawNumber:number,winnerId:win.id,winnerName:name,drawAt:firebase.firestore.FieldValue.serverTimestamp(),method:number===1?"First draw agreed by group":"Random selection"});tx.update(configRef,{drawCount:number,firstDrawDone:true,lastWinnerId:win.id,lastWinnerName:name,lastDrawAt:firebase.firestore.FieldValue.serverTimestamp()});window.lastWinner=name;window.lastNumber=number});el("winnerName").textContent=window.lastWinner;el("winnerNote").textContent="Draw "+window.lastNumber+" saved successfully.";status("Winner saved to Firebase.")}catch(e){status("Draw not completed: "+e.message,true)}finally{updateButton()}}
